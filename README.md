@@ -20,10 +20,10 @@ Over 54.8% of orders in the DataCo dataset are delivered late, causing significa
 ## 📂 Project Structure
 
 ```
-SupplyChainAgent/
+cs336-Supply-Chain-Monitoring-Agent/
 │
 ├── Datasets/
-│   ├── raw_data.csv                  ← Original Kaggle dataset (you provide this)
+│   ├── DataCoSupplyChainDataset.csv  ← Original Kaggle dataset (you provide this)
 │   ├── cleaned_data.csv              ← Output of Notebook 1  [180,519 rows × 46 cols]
 │   ├── processed_data.csv            ← Output of Notebook 2  [180,519 rows × 28 cols]
 │   ├── feature_cols.json             ← Feature list saved by Notebook 2
@@ -44,6 +44,18 @@ SupplyChainAgent/
 ├── README.md
 └── presentation.pptx
 ```
+
+---
+
+## 📓 Notebook Descriptions
+
+| # | Notebook | Purpose |
+|---|---|---|
+| 1 | `1_data_preprocessing.ipynb` | Load raw CSV, inspect schema, visualise distributions, handle missing values, fix dtypes, save clean data |
+| 2 | `2_feature_engineering.ipynb` | Compute delay features, extract time features, create financial ratios, encode categoricals, save feature list |
+| 3 | `3_delay_prediction.ipynb` | Train Random Forest + Logistic Regression, evaluate with ROC/PR curves, generate delay probabilities |
+| 4 | `4_agent_logic.ipynb` | Map probabilities to risk levels, apply rule-based agent to assign recommendations per order |
+| 5 | `5_visualization.ipynb` | Risk distribution charts, shipping mode analysis, executive KPI dashboard, final insights |
 
 ---
 
@@ -71,36 +83,33 @@ SupplyChainAgent/
 
 ## 📥 Getting the Dataset
 
-The dataset (~120 MB) exceeds GitHub's file size limit and is not included in this repository.
-You must download it manually before running any notebook.
+The dataset (~180 MB) exceeds GitHub's file size limit and is **not included** in this repository. You must download it manually before running any notebook.
 
-**Step 1 — Download**
-Visit the Kaggle page and download the dataset:
+**Step 1 — Download**  
+Visit the Kaggle page and download the dataset:  
 👉 https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis
-The downloaded file is named `DataCoSupplyChainDataset.csv`.
 
 You will need a free Kaggle account. Click **Download** on the dataset page.
 
-**Step 2 — Create the Datasets folder**
-The `Datasets/` folder is not included in the repository (it only contains generated files).
-Create it manually inside the project root:
+**Step 2 — Create the Datasets folder**  
+The `Datasets/` folder is not tracked by Git. Create it manually inside the project root:
+
 ```bash
 mkdir Datasets
 ```
 
-Or simply create a new folder named `Datasets` in the project root using your file explorer.
+Or create a new folder named `Datasets` in the project root using your file explorer.
 
-**Step 3 — Place the file**
-Move the downloaded `DataCoSupplyChainDataset.csv` into the `Datasets/` folder you just created:
+**Step 3 — Place the file**  
+Move `DataCoSupplyChainDataset.csv` (no renaming needed) into the folder you just created:
+
 ```
-SupplyChainAgent/
+cs336-Supply-Chain-Monitoring-Agent/
 └── Datasets/
     └── DataCoSupplyChainDataset.csv    ← file goes here
 ```
 
-> ⚠️ The path `Datasets/DataCoSupplyChainDataset.csv` is hardcoded in Notebook 1. If the file is placed
-> anywhere else, named differently, or the folder doesn't exist, you will get a
-> `FileNotFoundError` on the first cell.
+> ⚠️ The path `Datasets/DataCoSupplyChainDataset.csv` is hardcoded in Notebook 1. If the file is placed anywhere else or the folder does not exist, you will get a `FileNotFoundError` on the first cell.
 
 > ⚠️ The dataset uses `latin-1` encoding. Notebook 1 handles this automatically.
 
@@ -109,7 +118,7 @@ SupplyChainAgent/
 ## 🔁 Pipeline Overview
 
 ```
-Datasets/raw_data.csv          (180,519 rows × 53 columns)
+Datasets/DataCoSupplyChainDataset.csv  (180,519 rows × 53 columns)
          │
          ▼
 [Notebook 1] Data Inspection, Visualization & Cleaning
@@ -163,11 +172,11 @@ Datasets/final_output.csv      (180,519 rows × 10 columns)
 
 ---
 
-## 📓 Notebook Descriptions
+## 📓 Detailed Notebook Descriptions
 
 ### `1_data_preprocessing.ipynb` — Data Inspection, Visualization & Cleaning
 
-**Input:** `Datasets/raw_data.csv` (53 columns, loaded with `encoding='latin-1'`)  
+**Input:** `Datasets/DataCoSupplyChainDataset.csv` (53 columns, loaded with `encoding='latin-1'`)  
 **Output:** `Datasets/cleaned_data.csv` (46 columns)
 
 What this notebook does, step by step:
@@ -255,15 +264,6 @@ What this notebook does, step by step:
   - `delay_model.pkl` — pickled dictionary containing: `model`, `model_name`, `feature_cols`, `scaler`
   - `predictions.csv` — full dataset (all 180,519 rows) enriched with three new columns: `predicted_late`, `delay_probability`, `prediction_correct`
 
-**Model performance:**
-
-| Metric | Value |
-|---|---|
-| Test Accuracy | 71.32% |
-| Train Accuracy | 72.29% |
-| Train-Test Gap | 0.0096 (no significant overfitting) |
-| Full-data Accuracy | 72.09% |
-
 ---
 
 ### `4_agent_logic.ipynb` — Risk Scoring + AI Agent Logic
@@ -339,14 +339,29 @@ What this notebook does, step by step:
 **Run notebooks strictly in this sequence. Do not skip steps.**
 
 ```
-Step 1 → 1_data_preprocessing.ipynb    reads raw_data.csv      → writes cleaned_data.csv
-Step 2 → 2_feature_engineering.ipynb   reads cleaned_data.csv  → writes processed_data.csv + feature_cols.json
+Step 1 → 1_data_preprocessing.ipynb    reads DataCoSupplyChainDataset.csv → writes cleaned_data.csv
+Step 2 → 2_feature_engineering.ipynb   reads cleaned_data.csv   → writes processed_data.csv + feature_cols.json
 Step 3 → 3_delay_prediction.ipynb      reads processed_data.csv → writes delay_model.pkl + predictions.csv
-Step 4 → 4_agent_logic.ipynb           reads predictions.csv   → writes final_output.csv
-Step 5 → 5_visualization.ipynb         reads final_output.csv  → writes dashboard.png + prints insights
+Step 4 → 4_agent_logic.ipynb           reads predictions.csv    → writes final_output.csv
+Step 5 → 5_visualization.ipynb         reads final_output.csv   → writes dashboard.png + prints insights
 ```
 
 > ⚠️ **Critical:** Each notebook reads the output of the previous one. Running out of order or skipping a step will cause a `FileNotFoundError`. Always complete each notebook fully (all cells run, no errors) before opening the next.
+
+---
+
+## 🏆 Key Results
+
+| Metric | Value |
+|---|---|
+| Best Model | Random Forest |
+| Test Accuracy | 71.32% |
+| Full-data Accuracy | 72.09% |
+| Train-Test Gap | 0.0096 (no significant overfitting) |
+| ROC-AUC | evaluated per notebook 3 output |
+| HIGH risk orders | 58,877 (32.6%) |
+| Orders needing action | 171,354 (94.9%) |
+| Avg delay probability (late orders) | 64.9% |
 
 ---
 
@@ -361,14 +376,6 @@ Compatible with Python 3.9 and above
 
 ### Required Libraries
 
-Install all dependencies in one command:
-
-```bash
-pip install pandas numpy matplotlib seaborn scikit-learn jupyter
-```
-
-### Library Versions
-
 | Library | Version Used | Role in Project |
 |---|---|---|
 | `pandas` | 2.x | Data loading, manipulation, CSV I/O |
@@ -381,7 +388,25 @@ pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 | `warnings` | stdlib (built-in) | Suppressing non-critical runtime warnings |
 | `jupyter` | 1.0.0 | Notebook runtime environment |
 
-### `requirements.txt`
+### Installation
+
+**Option A — pip (recommended for quick setup)**
+
+```bash
+pip install pandas numpy matplotlib seaborn scikit-learn jupyter
+```
+
+**Option B — conda**
+
+```bash
+conda create -n supply-chain-agent python=3.10
+conda activate supply-chain-agent
+conda install pandas numpy matplotlib seaborn scikit-learn jupyter
+```
+
+**Option C — requirements file**
+
+Create `requirements.txt`:
 
 ```
 pandas>=1.5.3
@@ -392,6 +417,12 @@ scikit-learn>=1.2.0
 jupyter>=1.0.0
 ```
 
+Then run:
+
+```bash
+pip install -r requirements.txt
+```
+
 ---
 
 ## 🚀 How to Run
@@ -399,25 +430,31 @@ jupyter>=1.0.0
 ### Option 1: Jupyter Notebook (Recommended)
 
 ```bash
-# 1. Navigate into the project root
-cd SupplyChainAgent
+# 1. Clone the repository
+git clone https://github.com/Anvithsai/cs336-Supply-Chain-Monitoring-Agent
+cd cs336-Supply-Chain-Monitoring-Agent
 
 # 2. Install all dependencies
 pip install pandas numpy matplotlib seaborn scikit-learn jupyter
 
-# 3. Place raw_data.csv inside Datasets/
+# 3. Create required directories
+mkdir Datasets
+mkdir models
 
-# 4. Launch Jupyter
+# 4. Download the dataset from Kaggle, place DataCoSupplyChainDataset.csv in Datasets/
+#    See "Getting the Dataset" section above for full instructions
+
+# 5. Launch Jupyter
 jupyter notebook
 
-# 5. Open the notebooks/ folder in the browser
+# 6. Open the notebooks/ folder in the browser
 #    Run each notebook top-to-bottom in order: 1 → 2 → 3 → 4 → 5
 #    Confirm the ✅ message at the end of each before moving to the next
 ```
 
 ### Option 2: VS Code with Jupyter Extension
 
-1. Open the `SupplyChainAgent/` folder in VS Code
+1. Open the `cs336-Supply-Chain-Monitoring-Agent/` folder in VS Code
 2. Install the **Jupyter** extension from the Extensions panel
 3. Open `notebooks/1_data_preprocessing.ipynb` and click **Run All**
 4. Confirm the notebook prints `✅ Cleaned data saved to: ../Datasets/cleaned_data.csv`
