@@ -69,10 +69,38 @@ SupplyChainAgent/
 | `order date (DateOrders)` | Order placement timestamp |
 | `shipping date (DateOrders)` | Shipping timestamp |
 
-**Download instructions:**
-1. Visit the Kaggle link above and download `DataCoSupplyChainDataset.csv`
-2. Rename it to `raw_data.csv`
-3. Place it inside the `Datasets/` folder before running any notebook
+## 📥 Getting the Dataset
+
+The dataset (~120 MB) exceeds GitHub's file size limit and is not included in this repository.
+You must download it manually before running any notebook.
+
+**Step 1 — Download**
+Visit the Kaggle page and download the dataset:
+👉 https://www.kaggle.com/datasets/shashwatwork/dataco-smart-supply-chain-for-big-data-analysis
+The downloaded file is named `DataCoSupplyChainDataset.csv`.
+
+You will need a free Kaggle account. Click **Download** on the dataset page.
+
+**Step 2 — Create the Datasets folder**
+The `Datasets/` folder is not included in the repository (it only contains generated files).
+Create it manually inside the project root:
+```bash
+mkdir Datasets
+```
+
+Or simply create a new folder named `Datasets` in the project root using your file explorer.
+
+**Step 3 — Place the file**
+Move the downloaded `DataCoSupplyChainDataset.csv` into the `Datasets/` folder you just created:
+```
+SupplyChainAgent/
+└── Datasets/
+    └── DataCoSupplyChainDataset.csv    ← file goes here
+```
+
+> ⚠️ The path `Datasets/DataCoSupplyChainDataset.csv` is hardcoded in Notebook 1. If the file is placed
+> anywhere else, named differently, or the folder doesn't exist, you will get a
+> `FileNotFoundError` on the first cell.
 
 > ⚠️ The dataset uses `latin-1` encoding. Notebook 1 handles this automatically.
 
